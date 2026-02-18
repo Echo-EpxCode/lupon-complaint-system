@@ -1,0 +1,210 @@
+/* Custom Styles for Complaint Management System */
+
+/* Updated Color Palette */
+:root {
+    --primary-color: #0052CC; /* Deep blue for primary buttons */
+    --secondary-color: #00BFA6; /* Teal for secondary/info buttons */
+    --background-color: #F5F6FA; /* Light gray/white for main dashboard */
+    --card-bg: #FFFFFF; /* Clean white for cards/panels */
+    --sidebar-bg: #1F2937; /* Dark gray/charcoal for sidebar */
+    --sidebar-text: #E5E7EB; /* Light gray for sidebar text */
+    --sidebar-icon: #9CA3AF; /* Muted gray for sidebar icons */
+    --sidebar-hover: #374151; /* Lighter charcoal for hover */
+    --sidebar-active-bg: #2563EB; /* Modern blue for active */
+    --sidebar-active-text: #FFFFFF; /* White for active text/icon */
+    --success-color: #22C55E; /* Green for success/resolved */
+    --warning-color: #FBBF24; /* Amber for warning/pending */
+    --error-color: #EF4444; /* Red for error/rejected */
+    --text-color: #212529;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    --transition: 0.2s ease-in-out; /* Smooth hover transition */
+}
+
+/* Global Overrides */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: transform var(--transition);
+    background-color: var(--sidebar-bg);
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar .nav-link {
+    padding: 0.75rem 1rem;
+    color: var(--sidebar-text) !important;
+    transition: background-color var(--transition), color var(--transition);
+}
+
+.sidebar .nav-link:hover {
+    background-color: var(--sidebar-hover);
+    color: var(--sidebar-text) !important;
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--sidebar-active-text) !important;
+}
+
+.sidebar .nav-link i {
+    color: var(--sidebar-icon); /* For icons, if added */
+}
+
+.sidebar .nav-link.active i {
+    color: var(--sidebar-active-text);
+}
+
+/* Main Content Adjustment and Dashboard Background */
+main {
+    margin-left: 250px;
+    transition: margin-left var(--transition);
+    background-color: var(--background-color);
+    min-height: 100vh;
+}
+
+.sidebar.collapsed + main {
+    margin-left: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    main {
+        margin-left: 0;
+    }
+    .sidebar.show {
+        transform: translateX(0);
+    }
+}
+
+/* Header Styles */
+header {
+    box-shadow: var(--shadow);
+    background-color: var(--card-bg);
+}
+
+/* Sidebar Toggle Button Enhancements */
+.sidebar-toggle-btn {
+    border: 2px solid var(--secondary-color);
+    background-color: var(--card-bg);
+    color: var(--secondary-color);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    transition: all var(--transition);
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--card-bg);
+}
+
+.sidebar-toggle-btn .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='currentColor' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    width: 1.5em;
+    height: 1.5em;
+}
+
+/* Card and Panel Styles */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+}
+
+.table {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    background-color: var(--card-bg);
+}
+
+/* Status Classes for Table/Alerts */
+.status-resolved {
+    background-color: var(--success-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.status-pending {
+    background-color: var(--warning-color);
+    color: black;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.status-rejected {
+    background-color: var(--error-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Form Enhancements */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 82, 204, 0.25);
+}
+
+/* Modal Styles */
+.modal-content {
+    background-color: var(--card-bg);
+    box-shadow: var(--shadow);
+    border-radius: 0.5rem;
+}
+
+.modal {
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color var(--transition), border-color var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: #003d99; /* Darker shade for hover */
+    border-color: #003d99;
+}
+
+.btn-info {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: white;
+    transition: background-color var(--transition), border-color var(--transition);
+}
+
+.btn-info:hover {
+    background-color: #009688; /* Darker shade for hover */
+    border-color: #009688;
+}
+
+/* Accessibility and Spacing */
+.table th, .table td {
+    vertical-align: middle;
+}
