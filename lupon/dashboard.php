@@ -54,7 +54,7 @@
                 <button class="btn btn-outline-secondary d-md-none me-3" id="sidebarToggle">
                     <i class="bi bi-list"></i>
                 </button>
-                <h1 class="h4 mb-0">Agent Dashboard</h1>
+                <h1 class="h4 mb-0">Lupon Member Dashboard</h1>
             </header>
 
             <div class="p-4">
