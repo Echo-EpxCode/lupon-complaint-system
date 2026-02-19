@@ -4,12 +4,12 @@
 :root {
     --primary-color: #0052CC; /* Deep blue for primary buttons */
     --secondary-color: #00BFA6; /* Teal for secondary/info buttons */
-    --background-color: #F5F6FA; /* Light gray/white for main dashboard */
+    --background: linear-gradient(160deg, #43A047 0%, #2E7D32 100%); /* Light gray/white for main dashboard */
     --card-bg: #FFFFFF; /* Clean white for cards/panels */
     --sidebar-bg: #1F2937; /* Dark gray/charcoal for sidebar */
     --sidebar-text: #E5E7EB; /* Light gray for sidebar text */
     --sidebar-icon: #9CA3AF; /* Muted gray for sidebar icons */
-    --sidebar-hover: #374151; /* Lighter charcoal for hover */
+    --sidebar-hover: rgba(25, 179, 104, 0.694); /* Lighter charcoal for hover */
     --sidebar-active-bg: #2563EB; /* Modern blue for active */
     --sidebar-active-text: #FFFFFF; /* White for active text/icon */
     --success-color: #22C55E; /* Green for success/resolved */
@@ -28,6 +28,7 @@ body {
 }
 
 /* Sidebar Styles */
+/* Sidebar Styles */
 .sidebar {
     width: 250px;
     min-height: 100vh;
@@ -36,7 +37,9 @@ body {
     left: 0;
     z-index: 1000;
     transition: transform var(--transition);
-    background-color: var(--sidebar-bg);
+    /* Gradient Green */
+    /* background: linear-gradient(160deg, #43A047 0%, hsl(123, 73%, 41%) 100%); */
+    box-shadow: 2px 0 10px rgba(12, 211, 108, 0.1);
 }
 
 .sidebar.collapsed {
@@ -47,24 +50,35 @@ body {
     padding: 0.75rem 1rem;
     color: var(--sidebar-text) !important;
     transition: background-color var(--transition), color var(--transition);
+    display: flex; /* Ensures icon and text align properly */
+    align-items: center;
 }
 
 .sidebar .nav-link:hover {
     background-color: var(--sidebar-hover);
-    color: var(--sidebar-text) !important;
+    color: #FFFFFF !important;
 }
 
 .sidebar .nav-link.active {
     background-color: var(--sidebar-active-bg);
     color: var(--sidebar-active-text) !important;
+    border-left: 4px solid #FFFFFF;
 }
 
-.sidebar .nav-link i {
-    color: var(--sidebar-icon); /* For icons, if added */
+/* ICON FIX: Targeting Bootstrap Icons specifically */
+.sidebar .nav-link i.bi, 
+.sidebar .nav-link .bi {
+    color: #FFFFFF !important; /* Force icons to be white */
+    font-size: 1.2rem;         /* Adjust size if needed */
+    margin-right: 10px;        /* Space between icon and text */
+    width: 20px;
+    text-align: center;
+    display: inline-block;
 }
 
-.sidebar .nav-link.active i {
-    color: var(--sidebar-active-text);
+.sidebar .nav-link.active i.bi,
+.sidebar .nav-link.active .bi {
+    color: #FFFFFF !important;
 }
 
 /* Main Content Adjustment and Dashboard Background */

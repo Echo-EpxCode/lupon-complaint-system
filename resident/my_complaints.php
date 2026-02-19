@@ -1,12 +1,24 @@
 <?php
-
-require_once "../config/auth.php";
-checkAuth();
+// 1. Start Session (Ensure this is at the very top)
+session_start();
 include_once '../config/database.php';
 
-$lupon_id = $_SESSION['user_id']; // Defaulting to 1 for testing
+// 3. Check if user is logged in (Simulation)
+// In a real app, you would check if $_SESSION['user_id'] is set
+$user_id = $_SESSION['user_id']; // Defaulting to 1 for testing
 
-$sql = "Select * from `users` WHERE `u"
+// 4. Fetch Complaints specific to the user
+$sql = "SELECT c.complaint_id, c.complaint_type, c.description, c.created_at, s.status_name,
+        (SELECT file_path FROM complaint_attachments WHERE complaint_id = c.complaint_id LIMIT 1) as attachment_path
+        FROM complaints c
+        LEFT JOIN complaint_status s ON c.status_id = s.status_id
+        WHERE c.user_id = ?
+        ORDER BY c.created_at DESC";
+
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 ?>
 
@@ -15,7 +27,7 @@ $sql = "Select * from `users` WHERE `u"
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Dashboard - Assigned Complaints</title>
+    <title>My Complaints</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for Icons -->
@@ -29,14 +41,13 @@ $sql = "Select * from `users` WHERE `u"
 <body>
 
 <div class="container">
-    <h2 class="mb-4 text-success"><i class="fas fa-headset"></i> Assigned Complaints</h2>
+    <h2 class="mb-4 text-primary"><i class="fas fa-user-circle"></i> My Complaints</h2>
 
     <div class="table-container">
         <table class="table table-hover table-striped align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
-                    <th>Complainant</th>
                     <th>Type</th>
                     <th>Date</th>
                     <th>Status</th>
@@ -49,12 +60,11 @@ $sql = "Select * from `users` WHERE `u"
                 if (mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                         
-                        // Determine Badge Color based on status
+                        // Determine Badge Color
                         $badgeClass = 'bg-secondary';
                         if ($row['status_name'] == 'Pending') $badgeClass = 'bg-warning text-dark';
                         if ($row['status_name'] == 'In Progress') $badgeClass = 'bg-info text-white';
                         if ($row['status_name'] == 'Resolved') $badgeClass = 'bg-success';
-                        if ($row['status_name'] == 'Closed') $badgeClass = 'bg-dark';
 
                         // Attachment Logic
                         $attPath = $row['attachment_path'];
@@ -71,14 +81,12 @@ $sql = "Select * from `users` WHERE `u"
                 ?>
                         <tr>
                             <td>#<?php echo htmlspecialchars($row['complaint_id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['complainant_name']); ?></td>
                             <td><?php echo htmlspecialchars($row['complaint_type']); ?></td>
                             <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                             <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($row['status_name']); ?></span></td>
                             <td>
-                                <!-- Popover for Description -->
-                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="popover" data-bs-title="Complaint Details" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
-                                    <i class="fas fa-eye"></i> View
+                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="popover" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
+                                    View
                                 </button>
                             </td>
                             <td>
@@ -99,10 +107,8 @@ $sql = "Select * from `users` WHERE `u"
                 <?php
                     }
                 } else {
-                    echo "<tr><td colspan='7' class='text-center'>No assigned complaints found.</td></tr>";
+                    echo "<tr><td colspan='6' class='text-center'>No complaints found.</td></tr>";
                 }
-                
-                // Close connection
                 mysqli_close($conn);
                 ?>
             </tbody>
@@ -110,9 +116,9 @@ $sql = "Select * from `users` WHERE `u"
     </div>
 </div>
 
-<!-- MODAL STRUCTURE (Same as User View) -->
+<!-- MODAL STRUCTURE -->
 <div class="modal fade" id="attachmentModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Attachment Preview</h5>
