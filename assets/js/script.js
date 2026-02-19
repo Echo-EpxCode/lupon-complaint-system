@@ -1,5 +1,3 @@
-// Complaint Management System JavaScript
-
 // Sidebar Toggle and Close for Smaller Screens Only
 const sidebar = document.getElementById("sidebar");
 const sidebarToggle = document.getElementById("sidebarToggle");
@@ -26,3 +24,10 @@ if (sidebarClose) {
 if (window.innerWidth < 768) {
   sidebar.classList.add("collapsed");
 }
+
+// Agent JavaScript Confirmation
+document.querySelector("form").addEventListener("submit", function (e) {
+  if (!confirm("Are you sure you want to update the status?")) {
+    e.preventDefault();
+  }
+});

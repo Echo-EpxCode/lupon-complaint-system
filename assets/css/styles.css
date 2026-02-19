@@ -1,0 +1,68 @@
+/* Card Styling */
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+/* Custom Green Button */
+.btn-green {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border: none;
+    font-weight: 600;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-green:hover {
+    background: linear-gradient(135deg, #218838 0%, #1a6b2c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+}
+
+
+/* Icon Styling */
+.login-icon {
+    font-size: 3rem;
+    color: #28a745;
+}
+
+/* Link Styling */
+.login-link {
+    color: #28a745;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link:hover {
+    color: #1e7e34;
+    text-decoration: underline;
+}
+
+/* Decorative circle */
+.circle-decoration {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+}
+
+.circle-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -50px;
+    right: -50px;
+}
+
+/* Label styling */
+.form-label {
+    font-weight: 500;
+    color: #333;
+}

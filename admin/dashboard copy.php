@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Complaint Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<?php
+    require_once "../config/auth.php";
+    checkAuth();
+    include '../includes/header.php';
+?>
+
     <div class="d-flex">
         <!-- Sidebar -->
-        <aside class="sidebar bg-dark text-white" id="sidebar">
-            <div class="sidebar-header p-3 d-flex justify-content-between align-items-center">
-                <h5>Complaint System</h5>
-                <button class="btn btn-dark btn-close btn-close-white d-md-none" id="sidebarClose" aria-label="Close sidebar"></button>
-            </div>
-            <nav class="nav flex-column p-3" role="navigation" aria-label="Main navigation">
-                <a class="nav-link text-white" href="#overview">Overview</a>
-                <a class="nav-link text-white" href="#complaints">My Complaints</a>
-                <a class="nav-link text-white" href="#settings">Settings</a>
-                <a class="nav-link text-white" href="index.html">Logout</a>
-            </nav>
-        </aside>
+         <?php
+            include '../includes/sidebar.php';
+         ?>
+
 
         <!-- Main Content -->
         <main class="flex-fill">
@@ -66,22 +54,7 @@
         </main>
     </div>
 
-    <!-- Modal for Dynamic Content -->
-    <div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="complaintModalLabel">Complaint Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="modalContent">
-                    <!-- Dynamic content loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+<?php
+    include '../includes/footer.php';
+?>
