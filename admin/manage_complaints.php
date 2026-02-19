@@ -136,7 +136,7 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm fw-bold btn-outline-success" data-bs-toggle="popover" 
+                                                    <button class="btn btn-sm fw-bold btn-outline-secondary" data-bs-toggle="popover" 
                                                         data-bs-title="Complaint Details" 
                                                         data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
                                                         <i class="bi bi-eye"></i> View

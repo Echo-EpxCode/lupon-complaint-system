@@ -97,7 +97,7 @@
                                         <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                                         <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($row['status_name']); ?></span></td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="popover" 
+                                            <button class="btn btn-sm fw-bold btn-outline-secondary" data-bs-toggle="popover" 
                                                 data-bs-title="Complaint Details" 
                                                 data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
                                                 View
@@ -105,7 +105,7 @@
                                         </td>
                                         <td>
                                             <?php if($attPath): ?>
-                                                <button type="button" class="btn btn-primary btn-sm" 
+                                                <button type="button" class="btn btn-primary btn-sm fw-bold" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#attachmentModal"
                                                     datafilepath="<?php echo $fullPath; ?>"
@@ -119,7 +119,7 @@
                                         </td>
                                         <td>
                                             <!-- Link to update status page -->
-                                            <a href="update_status.php?id=<?php echo $row['complaint_id']; ?>" class="btn btn-success btn-sm">
+                                            <a href="update_status.php?id=<?php echo $row['complaint_id']; ?>" class="btn btn-success btn-sm fw-bold">
                                                 <i class="fas fa-edit"></i> Update
                                             </a>
                                         </td>
