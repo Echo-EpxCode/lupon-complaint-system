@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS complaints (
     assigned_agent_id INT DEFAULT NULL,
     complaint_type VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
+    meeting_link VARCHAR(500) NULL,
     status_id INT DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -97,8 +98,8 @@ while (mysqli_more_results($conn)) {
 $adminPassword = password_hash("admin123", PASSWORD_DEFAULT);
 
 $adminSql = "
-INSERT IGNORE INTO users (username, email, password, role_id)
-VALUES ('admin', 'admin@example.com', '$adminPassword', 1)
+INSERT IGNORE INTO users (username, email, password, role_id, status)
+VALUES ('admin', 'admin@example.com', '$adminPassword', 1, 'Accepted')
 ";
 
 if (!mysqli_query($conn, $adminSql)) {
@@ -106,3 +107,4 @@ if (!mysqli_query($conn, $adminSql)) {
 }
 
 // echo "Complaint system database initialized successfully ✅";
+?>

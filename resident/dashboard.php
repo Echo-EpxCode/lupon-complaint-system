@@ -6,17 +6,32 @@
     $user_id = $_SESSION['user_id'];
 
     // Fetch Complaints specific to the user
-    $sql = "SELECT c.complaint_id, c.complaint_type, c.description, c.created_at, s.status_name,
-            (SELECT file_path FROM complaint_attachments WHERE complaint_id = c.complaint_id LIMIT 1) as attachment_path
+    $sql = "SELECT 
+                c.complaint_id, 
+                c.complaint_type, 
+                c.description, 
+                c.created_at, 
+                s.status_name, 
+                c.meeting_link,
+                (SELECT file_path 
+                 FROM complaint_attachments 
+                 WHERE complaint_id = c.complaint_id 
+                 LIMIT 1) AS attachment_path
             FROM complaints c
             LEFT JOIN complaint_status s ON c.status_id = s.status_id
             WHERE c.user_id = ?
             ORDER BY c.created_at DESC";
     
     $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Prepare failed: " . mysqli_error($conn));
+    }
+    
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
+    
     $result = mysqli_stmt_get_result($stmt);
+    
 
     include '../includes/header.php';
 ?>
@@ -36,7 +51,7 @@
             </header>
 
             <div class="p-4">
-                <h2 class="mb-4 text-primary"><i class="fas fa-user-circle"></i> My Complaints</h2>
+                <h2 class="mb-4 text-success fw-bold"><i class="fas fa-user-circle"></i> My Complaints</h2>
 
                         <!-- Complaints Table -->
                 <div class="card border-0 shadow-sm">
@@ -53,6 +68,7 @@
                                 <th>Date</th>
                                 <th>Status</th>
                                 <th>Description</th>
+                                <th>Meeting Link</th>
                                 <th>Attachment</th>
                             </tr>
                         </thead>
@@ -86,13 +102,22 @@
                                         <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                                         <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($row['status_name']); ?></span></td>
                                         <td>
-                                            <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="popover" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
+                                            <button class="btn btn-sm fw-bold btn-outline-success" data-bs-toggle="popover" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>"><i class="bi bi-eye"></i>
                                                 View
                                             </button>
                                         </td>
                                         <td>
+                                            <?php if(!empty($row['meeting_link'])): ?>
+                                                <a href="<?php echo htmlspecialchars($row['meeting_link']); ?>" target="_blank" class="btn btn-sm fw-bold btn-success">
+                                                    <i class="fas fa-video"></i> Join
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="text-muted">Not available</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
                                             <?php if($attPath): ?>
-                                                <button type="button" class="btn btn-primary btn-sm" 
+                                                <button type="button" class="btn btn-primary btn-sm fw-bold" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#attachmentModal"
                                                     datafilepath="<?php echo $fullPath; ?>"
@@ -108,7 +133,7 @@
                             <?php
                                 }
                             } else {
-                                echo "<tr><td colspan='6' class='text-center'>No complaints found.</td></tr>";
+                                echo "<tr><td colspan='7' class='text-center'>No complaints found.</td></tr>";
                             }
                             mysqli_close($conn);
                             ?>

@@ -23,7 +23,7 @@
 
             <div class="col-md-8 mt-4 p-4">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
+                    <div class="card-header bg-success text-white">
                         <h5 class="mb-0">Submit a Complaint</h5>
                     </div>
                     <div class="card-body">
@@ -80,7 +80,7 @@
 
                         <!-- Submit Button -->
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary" name="submit">
+                            <button type="submit" class="btn btn-success fw-bold" name="submit">
                                 Submit Complaint
                             </button>
                         </div>

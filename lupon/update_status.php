@@ -1,24 +1,57 @@
-<?php require_once "../config/auth.php"; 
+<?php 
+require_once "../config/auth.php"; 
 include_once '../config/database.php'; 
-$agent_id = $_SESSION['user_id']; $complaint_id = $_GET['id'] ?? 0; 
-// Handle form submission 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) { $new_status_id = $_POST['status_id'];
- // Update complaint status 
- $updateSql = "UPDATE complaints SET status_id = ?, updated_at = NOW() WHERE complaint_id = ? AND assigned_agent_id = ?";
-$updateStmt = mysqli_prepare($conn, $updateSql); 
-mysqli_stmt_bind_param($updateStmt, "iii", $new_status_id, $complaint_id, $agent_id);
- if (mysqli_stmt_execute($updateStmt)) 
- { 
-    echo "<script> alert('Status updated successfully!'); window.location.href = 'dashboard.php'; </script>"; exit; 
- } else { echo "<script>alert('Error updating status.');</script>";
-  }
-   } 
-   // Fetch complaint details 
-   $sql = "SELECT c.*, s.status_name, u.username as complainant_name, u.email as complainant_email FROM complaints c LEFT JOIN complaint_status s ON c.status_id = s.status_id LEFT JOIN users u ON c.user_id = u.user_id WHERE c.complaint_id = ? AND c.assigned_agent_id = ?"; $stmt = mysqli_prepare($conn, $sql); mysqli_stmt_bind_param($stmt, "ii", $complaint_id, $agent_id); mysqli_stmt_execute($stmt); $result = mysqli_stmt_get_result($stmt); $complaint = mysqli_fetch_assoc($result); 
-   // If complaint not found or not assigned to this agent 
-   if (!$complaint) { echo "<script>window.location.href = 'dashboard.php';</script>"; exit; } include '../includes/header.php'; 
 
-   ?>
+$agent_id = $_SESSION['user_id']; 
+$complaint_id = $_GET['id'] ?? 0; 
+
+// Handle form submission 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) { 
+    $new_status_id = $_POST['status_id'];
+    $meeting_link = $_POST['meeting_link'] ?? null;
+
+    // Remove https:// if user forgot to add it (optional)
+    if ($meeting_link && !preg_match("~^(?:f|ht)tps?://~i", $meeting_link)) {
+        $meeting_link = "https://" . $meeting_link;
+    }
+
+    // Update complaint status AND meeting link
+    $updateSql = "UPDATE complaints 
+                  SET status_id = ?, meeting_link = ?, updated_at = NOW() 
+                  WHERE complaint_id = ? AND assigned_agent_id = ?";
+    
+    $updateStmt = mysqli_prepare($conn, $updateSql); 
+    mysqli_stmt_bind_param($updateStmt, "isii", $new_status_id, $meeting_link, $complaint_id, $agent_id);
+    
+    if (mysqli_stmt_execute($updateStmt)) { 
+        echo "<script> alert('Status updated successfully!'); window.location.href = 'dashboard.php'; </script>"; 
+        exit; 
+    } else { 
+        echo "<script>alert('Error updating status.');</script>"; 
+    }
+} 
+
+// Fetch complaint details 
+$sql = "SELECT c.*, s.status_name, u.username as complainant_name, u.email as complainant_email 
+        FROM complaints c 
+        LEFT JOIN complaint_status s ON c.status_id = s.status_id 
+        LEFT JOIN users u ON c.user_id = u.user_id 
+        WHERE c.complaint_id = ? AND c.assigned_agent_id = ?"; 
+
+$stmt = mysqli_prepare($conn, $sql); 
+mysqli_stmt_bind_param($stmt, "ii", $complaint_id, $agent_id); 
+mysqli_stmt_execute($stmt); 
+$result = mysqli_stmt_get_result($stmt); 
+$complaint = mysqli_fetch_assoc($result); 
+
+// If complaint not found or not assigned to this agent 
+if (!$complaint) { 
+    echo "<script>window.location.href = 'dashboard.php';</script>"; 
+    exit; 
+} 
+
+include '../includes/header.php'; 
+?>
 
 <div class="d-flex">
     <!-- Sidebar -->
@@ -86,6 +119,16 @@ mysqli_stmt_bind_param($updateStmt, "iii", $new_status_id, $complaint_id, $agent
                                         </span>
                                     </td>
                                 </tr>
+                                <?php if (!empty($complaint['meeting_link'])): ?>
+                                <tr>
+                                    <th>Meeting Link</th>
+                                    <td>
+                                        <a href="<?php echo htmlspecialchars($complaint['meeting_link']); ?>" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-video"></i> Join Meeting
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
                             </table>
                             
                             <div class="mt-3">
@@ -108,15 +151,28 @@ mysqli_stmt_bind_param($updateStmt, "iii", $new_status_id, $complaint_id, $agent
                             <form method="POST" action="">
                                 <div class="mb-3">
                                     <label for="status_id" class="form-label">Select New Status</label>
-                                    <select class="form-select" name="status_id" id="status_id" required>
+                                    <select class="form-select" name="status_id" id="status_id" required onchange="toggleMeetingLink()">
                                         <option value="">-- Select Status --</option>
                                         <option value="1">Pending</option>
-                                        <option value="2">In Progress</option>
+                                        <option value="2" <?php echo ($complaint['status_id'] == 2) ? 'selected' : ''; ?>>In Progress</option>
                                         <option value="3">Resolved</option>
                                         <option value="4">Closed</option>
                                     </select>
                                     <div class="form-text">
                                         Changing status will be reflected immediately.
+                                    </div>
+                                </div>
+                                
+                                <!-- Meeting Link Input -->
+                                <div class="mb-3" id="meetingLinkContainer" style="display: <?php echo ($complaint['status_id'] == 2 || !empty($complaint['meeting_link'])) ? 'block' : 'none'; ?>;">
+                                    <label for="meeting_link" class="form-label">
+                                        <i class="fas fa-video"></i> Zoom Meeting Link
+                                    </label>
+                                    <input type="url" class="form-control" name="meeting_link" id="meeting_link" 
+                                           placeholder="https://zoom.us/j/..." 
+                                           value="<?php echo htmlspecialchars($complaint['meeting_link'] ?? ''); ?>">
+                                    <div class="form-text">
+                                        Enter the Zoom meeting link for the complaint hearing.
                                     </div>
                                 </div>
                                 
@@ -136,8 +192,27 @@ mysqli_stmt_bind_param($updateStmt, "iii", $new_status_id, $complaint_id, $agent
         </div>
     </main>
 </div>
+
+<!-- JavaScript to show/hide meeting link field -->
+<script>
+function toggleMeetingLink() {
+    var statusId = document.getElementById('status_id').value;
+    var meetingLinkContainer = document.getElementById('meetingLinkContainer');
+    
+    // Show meeting link field when status is "In Progress" (value = 2)
+    if (statusId == 2) {
+        meetingLinkContainer.style.display = 'block';
+    } else {
+        meetingLinkContainer.style.display = 'none';
+    }
+}
+
+// Run on page load to maintain state
+document.addEventListener('DOMContentLoaded', function() {
+    toggleMeetingLink();
+});
+</script>
+
 <?php
     include '../includes/footer.php';
 ?>
-
-

@@ -65,7 +65,7 @@
                         <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>Centralized management of all complaints across the system.</h5>
                     </div>
                     <div class="card-body p-0">
-                        
+
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
@@ -136,7 +136,7 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="popover" 
+                                                    <button class="btn btn-sm fw-bold btn-outline-success" data-bs-toggle="popover" 
                                                         data-bs-title="Complaint Details" 
                                                         data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
                                                         <i class="bi bi-eye"></i> View
@@ -144,7 +144,7 @@
                                                 </td>
                                                 <td>
                                                     <?php if($attPath): ?>
-                                                        <button type="button" class="btn btn-primary btn-sm" 
+                                                        <button type="button" class="btn btn-primary btn-sm fw-bold" 
                                                             data-bs-toggle="modal" 
                                                             data-bs-target="#attachmentModal"
                                                             datafilepath="<?php echo $fullPath; ?>"
@@ -157,7 +157,7 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-success btn-sm" 
+                                                    <button type="button" class="btn btn-success btn-sm fw-bold" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#assignAgentModal"
                                                         data-complaint-id="<?php echo $row['complaint_id']; ?>">
