@@ -98,12 +98,38 @@ main {
     .sidebar {
         transform: translateX(-100%);
     }
+    
     main {
         margin-left: 0;
+        overflow-x: hidden; /* Prevents whole page horizontal scroll */
     }
+    
     .sidebar.show {
         transform: translateX(0);
     }
+    
+    /* Fix for table horizontal scroll on mobile */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+    }
+    
+    /* Ensure content doesn't overflow */
+    .d-flex {
+        overflow-x: hidden;
+    }
+}
+
+/* Force horizontal scroll for tables on all screen sizes if needed */
+.table-responsive {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+/* Ensure html and body don't block scrolling */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 /* Header Styles */

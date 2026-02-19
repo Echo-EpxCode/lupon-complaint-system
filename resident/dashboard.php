@@ -36,116 +36,117 @@
     include '../includes/header.php';
 ?>
 
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <?php include '../includes/sidebar.php'; ?>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <?php include '../includes/sidebar.php'; ?>
 
-        <!-- Main Content -->
-        <main class="flex-fill">
-            <!-- Header with Toggle Button -->
-            <header class="d-flex align-items-center p-3 bg-white border-bottom">
-                <button class="btn btn-outline-secondary d-md-none sidebar-toggle-btn me-3" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="false">
-                    <span class="navbar-toggler-icon">☰</span>
-                </button>
-                <h1 class="h4 mb-0">Welcome to Your Dashboard</h1>
-            </header>
+    <!-- Main Content -->
+    <main class="flex-fill">
+        <!-- Header with Toggle Button -->
+        <header class="d-flex align-items-center p-3 bg-white border-bottom">
+            <button class="btn btn-outline-secondary d-md-none sidebar-toggle-btn me-3" id="sidebarToggle" aria-label="Toggle sidebar" aria-expanded="false">
+                <span class="navbar-toggler-icon">☰</span>
+            </button>
+            <h1 class="h4 mb-0">Welcome to Your Dashboard</h1>
+        </header>
 
-            <div class="p-4">
-                <h2 class="mb-4 text-success fw-bold"><i class="fas fa-user-circle"></i> My Complaints</h2>
+        <div class="p-4">
+    <h2 class="mb-4 text-success fw-bold"><i class="fas fa-user-circle"></i> My Complaints</h2>
 
-                        <!-- Complaints Table -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>A list of complaints you have submitted.</h5>
-                    </div>
-                    <div class="card-body p-0">
-                    <div class="table-responsive">
-                <table class="table table-hover mb-0">
+    <!-- Complaints Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>A list of complaints you have submitted.</h5>
+        </div>
+        <div class="card-body p-0">
+            <!-- Responsive Wrapper: Enables scroll on mobile -->
+            <div class="table-responsive">
+                <!-- Added 'table-sm' for compact mobile view and 'align-middle' for alignment -->
+                <table class="table table-hover table-sm align-middle mb-0">
                     <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Meeting Link</th>
-                                <th>Attachment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    
-                                    // Badge Color
-                                    $badgeClass = 'bg-secondary';
-                                    if ($row['status_name'] == 'Pending') $badgeClass = 'bg-warning text-dark';
-                                    if ($row['status_name'] == 'In Progress') $badgeClass = 'bg-info text-white';
-                                    if ($row['status_name'] == 'Resolved') $badgeClass = 'bg-success';
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Meeting Link</th>
+                            <th scope="col">Attachment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                
+                                // Badge Color
+                                $badgeClass = 'bg-secondary';
+                                if ($row['status_name'] == 'Pending') $badgeClass = 'bg-warning text-dark';
+                                if ($row['status_name'] == 'In Progress') $badgeClass = 'bg-info text-white';
+                                if ($row['status_name'] == 'Resolved') $badgeClass = 'bg-success';
 
-                                    // Attachment Logic
-                                    $attPath = $row['attachment_path'];
-                                    $fullPath = ""; 
-                                    $isImage = false;
+                                // Attachment Logic
+                                $attPath = $row['attachment_path'];
+                                $fullPath = ""; 
+                                $isImage = false;
 
-                                    if ($attPath) {
-                                        $fullPath = "../folder/" . $attPath;
-                                        $ext = strtolower(pathinfo($attPath, PATHINFO_EXTENSION));
-                                        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                            $isImage = true;
-                                        }
+                                if ($attPath) {
+                                    $fullPath = "../folder/" . $attPath;
+                                    $ext = strtolower(pathinfo($attPath, PATHINFO_EXTENSION));
+                                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                        $isImage = true;
                                     }
-                            ?>
-                                    <tr>
-                                        <td>#<?php echo htmlspecialchars($row['complaint_id']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['complaint_type']); ?></td>
-                                        <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
-                                        <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($row['status_name']); ?></span></td>
-                                        <td>
-                                            <button class="btn btn-sm fw-bold btn-outline-success" data-bs-toggle="popover" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>"><i class="bi bi-eye"></i>
-                                                View
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <?php if(!empty($row['meeting_link'])): ?>
-                                                <a href="<?php echo htmlspecialchars($row['meeting_link']); ?>" target="_blank" class="btn btn-sm fw-bold btn-success">
-                                                    <i class="fas fa-video"></i> Join
-                                                </a>
-                                            <?php else: ?>
-                                                <span class="text-muted">Not available</span>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td>
-                                            <?php if($attPath): ?>
-                                                <button type="button" class="btn btn-primary btn-sm fw-bold" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#attachmentModal"
-                                                    datafilepath="<?php echo $fullPath; ?>"
-                                                    data-isimage="<?php echo $isImage ? 'true' : 'false'; ?>"
-                                                    data-filename="<?php echo htmlspecialchars($attPath); ?>">
-                                                    <i class="fas fa-paperclip"></i> View
-                                                </button>
-                                            <?php else: ?>
-                                                <span class="text-muted">None</span>
-                                            <?php endif; ?>
-                                        </td>
-                                    </tr>
-                            <?php
                                 }
-                            } else {
-                                echo "<tr><td colspan='7' class='text-center'>No complaints found.</td></tr>";
+                        ?>
+                                <tr>
+                                    <td>#<?php echo htmlspecialchars($row['complaint_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['complaint_type']); ?></td>
+                                    <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
+                                    <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($row['status_name']); ?></span></td>
+                                    <td>
+                                        <button class="btn btn-sm fw-bold btn-outline-success" data-bs-toggle="popover" data-bs-content="<?php echo htmlspecialchars($row['description']); ?>">
+                                            <i class="bi bi-eye"></i> View
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <?php if(!empty($row['meeting_link'])): ?>
+                                            <a href="<?php echo htmlspecialchars($row['meeting_link']); ?>" target="_blank" class="btn btn-sm fw-bold btn-success">
+                                                <i class="fas fa-video"></i> Join
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted">Not available</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if($attPath): ?>
+                                            <button type="button" class="btn btn-primary btn-sm fw-bold" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#attachmentModal"
+                                                datafilepath="<?php echo $fullPath; ?>"
+                                                data-isimage="<?php echo $isImage ? 'true' : 'false'; ?>"
+                                                data-filename="<?php echo htmlspecialchars($attPath); ?>">
+                                                <i class="fas fa-paperclip"></i> View
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="text-muted">None</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                        <?php
                             }
-                            mysqli_close($conn);
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-                        
-                    </div>        
-                </div>
+                        } else {
+                            echo "<tr><td colspan='7' class='text-center'>No complaints found.</td></tr>";
+                        }
+                        mysqli_close($conn);
+                        ?>
+                    </tbody>
+                </table>
             </div>
-        </main>
+        </div>        
     </div>
+</div>
+    </main>
+</div>
 
 <?php
     include '../includes/footer.php';

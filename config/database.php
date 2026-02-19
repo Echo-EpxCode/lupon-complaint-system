@@ -99,7 +99,7 @@ $adminPassword = password_hash("admin123", PASSWORD_DEFAULT);
 
 $adminSql = "
 INSERT IGNORE INTO users (username, email, password, role_id, status)
-VALUES ('admin', 'admin@example.com', '$adminPassword', 1, 'Accepted')
+VALUES ('ADMINISTRATOR', 'admin@example.com', '$adminPassword', 1, 'Accepted')
 ";
 
 if (!mysqli_query($conn, $adminSql)) {
