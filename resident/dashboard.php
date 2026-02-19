@@ -37,10 +37,16 @@
 
             <div class="p-4">
                 <h2 class="mb-4 text-primary"><i class="fas fa-user-circle"></i> My Complaints</h2>
-                
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped align-middle">
-                        <thead class="table-dark">
+
+                        <!-- Complaints Table -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="bi bi-card-list me-2"></i>A list of complaints you have submitted.</h5>
+                    </div>
+                    <div class="card-body p-0">
+                    <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
                             <tr>
                                 <th>ID</th>
                                 <th>Type</th>
@@ -108,7 +114,10 @@
                             ?>
                         </tbody>
                     </table>
-                </div>   
+                </div>
+                        
+                    </div>        
+                </div>
             </div>
         </main>
     </div>
