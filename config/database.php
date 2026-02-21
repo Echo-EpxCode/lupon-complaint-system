@@ -53,6 +53,7 @@ INSERT IGNORE INTO complaint_status (status_name) VALUES
 CREATE TABLE IF NOT EXISTS complaints (
     complaint_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    respondent_id INT DEFAULT NULL,
     assigned_agent_id INT DEFAULT NULL,
     complaint_type VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
