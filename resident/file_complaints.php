@@ -76,7 +76,7 @@ include '../includes/header.php';
                                 class="form-control"
                                 id="description"
                                 name="description"
-                                rows="12"
+                                rows="8"
                                 placeholder="Describe your complaint in detail..."
                                 required
                             ></textarea>
